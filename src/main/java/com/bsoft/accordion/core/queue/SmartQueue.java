@@ -85,7 +85,7 @@ public class SmartQueue implements MsgQueue {//ThreadSafe
                 List<MetaData> mergeData =  mergeQueue.get(dataId);
                 if (mergeData == null){
                     synchronized (mergeQueue){
-                        if (mergeQueue.get(dataId) == null) {
+                        if (mergeData == null) {
                             mergeData = new ArrayList();
                             mergeQueue.put(dataId,mergeData);
                         }

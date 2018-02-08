@@ -1,14 +1,13 @@
 package com.bsoft.accordion.core.task;
 
 
-import com.bsoft.accordion.core.MetaData;
+import com.bsoft.accordion.core.factory.NodeFactory;
 import com.bsoft.accordion.core.graph.NodeGraph;
 import com.bsoft.accordion.core.node.AbstractNode;
 import com.bsoft.accordion.core.node.DataInputNode;
 import com.bsoft.accordion.core.node.Endpoint;
-import com.bsoft.accordion.core.node.NormalNode;
 import com.bsoft.accordion.core.process.Processor;
-
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -43,100 +42,59 @@ import java.util.UUID;
  */
 public class TaskBuilder {
 
-    public static Task createTask(){
+
+    /*
+     input :
+      node list:
+            node  id
+            node type
+            processor
+      links list:
+            node link
+
+     */
+    public static Task createTask(List<NodeMeta> nodes, List<Link> links){
 
         String taskId = UUID.randomUUID().toString();
         Task task = new DefaultTask(taskId);
 
-        AbstractNode dataOutputNode = new DataInputNode();
-        dataOutputNode.setProcessor(new Processor() {
-            int count =0;
-            @Override
-            public MetaData process(MetaData data) {
-                data.getData().put("datacount", count++);
-                data.getData().put("normalData", "name1");
-                System.out.println("Intput 0 meta:" + data.getData());
-                if (count > 100){
-                    throw new NullPointerException();
-                }
-                return data;
-            }
-
-            private MetaData endMsg() {
-                MetaData meta = new MetaData();
-                meta.setEndMsg(true);
-                return meta;
-            }
-        });
-        dataOutputNode.setTaskId(taskId);
-        dataOutputNode.setNodeId("inputNode#1");
-
-        AbstractNode dataOutputNode1 = new NormalNode();
-        dataOutputNode1.setProcessor(new Processor() {
-
-            @Override
-            public MetaData process(MetaData data) {
-                int num = (Integer) data.getData().get("datacount")- 1;
-                data.getData().put("addData1", num);
-                System.out.println("normalnode 1 excute! meta:"+data.getData());
-                return data;
-            }
-        });
-        dataOutputNode1.setTaskId(taskId);
-        dataOutputNode1.setNodeId("normalNode#1");
-
-        AbstractNode dataOutputNode2 = new NormalNode();
-        dataOutputNode2.setProcessor(new Processor() {
-
-            @Override
-            public MetaData process(MetaData data) {
-                int num = (Integer) data.getData().get("datacount")+ 1;
-                data.getData().put("addData2", num);
-                System.out.println("normalnode 2 excute! meta:"+data.getData());
-                return data;
-            }
-        });
-        dataOutputNode2.setTaskId(taskId);
-        dataOutputNode2.setNodeId("normalNode#2");
-
-        AbstractNode dataOutputNode3 = new NormalNode();
-        dataOutputNode3.setProcessor(new Processor() {
-
-            int i = 0;
-            @Override
-            public MetaData process(MetaData data) {
-                int sub = (Integer) data.getData().get("addData1")+ (Integer) data.getData().get("addData2");
-                data.getData().put("sub", sub);
-                System.out.println("sub node excute! meta:"+data.getData());
-                return data;
-            }
-        });
-        dataOutputNode3.setTaskId(taskId);
-        dataOutputNode3.setNodeId("normalNode#3");
-
-        task.chain.add(dataOutputNode);
-        task.chain.add(dataOutputNode1);
-        task.chain.add(dataOutputNode2);
-        task.chain.add(dataOutputNode3);
+        nodes.forEach(node -> addNode(task, taskId, node));
 
         NodeGraph graph = new NodeGraph();
-        graph.addLink(dataOutputNode, dataOutputNode1);
-        graph.addLink(dataOutputNode, dataOutputNode2);
-        graph.addLink(dataOutputNode1, dataOutputNode3);
-        graph.addLink(dataOutputNode2, dataOutputNode3);
-
+        links.forEach(link -> graph.addLink(link.getHead(), link.getDirection()));
 
         //Set first  and end node;
         //Complete ();
+        complete(taskId, task, graph);
+
+        task.setGraph(graph);
+
+        return task;
+    }
+
+    private static void addNode(Task task, String taskId, NodeMeta nodeMeta) {
+        AbstractNode node = NodeFactory.getProcessNode(nodeMeta.getNodeType(), nodeMeta.getConfig());
+        node.setProcessor(nodeMeta.getProcessor());
+        node.setTaskId(taskId);
+        node.setNodeId(nodeMeta.getNodeId());
+        task.chain.add(node);
+    }
+
+    private static void complete(String taskId, Task task, NodeGraph graph) {
         AbstractNode head = new Endpoint("Start#0", taskId);
         AbstractNode end = new Endpoint("End#0", taskId);
         graph.setFistNode(head);
         graph.setEndNoe(end);
-
         task.chain.add(head);
         task.chain.add(end);
+    }
 
-        task.setGraph(graph);
-        return task;
+    public static AbstractNode createAbstractNode(Task task , String taskId, String nodeId, String nodeType, Processor processor) {
+        AbstractNode node = new DataInputNode();
+        node.setProcessor(processor);
+        node.setTaskId(taskId);
+        node.setNodeId("inputNode#1");
+        task.chain.add(node);
+        return node;
     }
 }

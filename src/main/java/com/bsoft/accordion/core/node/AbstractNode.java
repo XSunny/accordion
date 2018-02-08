@@ -17,7 +17,7 @@ public abstract class AbstractNode implements Runnable{
 
     protected Processor processor;
 
-    protected MetaData meta;// 同一个task 内传递
+    protected Config config;// 取消了节点持有消息的机制而引入了配置
 
     protected volatile Boolean runningFlag = true;
 
@@ -52,7 +52,7 @@ public abstract class AbstractNode implements Runnable{
                     break;
 //                    queue.pushMeta(nodeId, sourceMeta);//* 向下传递停止消息方案被抛弃的原因是 ： 如果节点不在出错节点的下游，将接收不到这个停止消息，前置节点仍然无法保证一致性问题。
                 }
-                meta = processor.process(sourceMeta);
+                MetaData meta = processor.process(sourceMeta);
                 queue.pushMeta(nodeId, meta);
 //                if (meta.isEndMsg()){
 //                    runningFlag = false;
@@ -73,10 +73,6 @@ public abstract class AbstractNode implements Runnable{
                 }
             }
         }
-    }
-
-    public MetaData getMeta() {
-        return meta;
     }
 
     public void setProcessor(Processor processor) {
