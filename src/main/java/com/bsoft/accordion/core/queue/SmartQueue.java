@@ -18,8 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  *  1.由于processor 会使用线程方式来执行，SmartQueue 需要保证线程安全。
  *  2.同一个task 内的所有processor 会共享一个 Queue, 每一个processor 只管询问Queue是否有下一个数据到达，然后，进行所需的处理，并将处理结果报告给queue。
  *  3.每一个 在queue内传递的消息都有一个batchID 与其他批次的消息进行区分，多个相同batchID会由SmartQueue进行合并，合并之后才可以被 下一个processor获取。
- *  4.为每一个processor 维护一个输入队列和输出队列，并且知道如何传递这些消息。（通过graph）
- *  5.需要一个结构来描述，每一个processor 的输出目标,告诉Queue下一传递目标，源不需要指定（由Queue 承担）
+ *  4.为每一个processor 维护一个数据队列，并且知道如何传递这些消息。（通过graph）
+ *  5.需要一个结构来描述，每一个processor 的输出目标(graph),告诉Queue下一传递目标，源不需要指定（由Queue 承担）
  */
 public class SmartQueue implements MsgQueue {//ThreadSafe
 
@@ -58,7 +58,7 @@ public class SmartQueue implements MsgQueue {//ThreadSafe
     private void init() {
         metaQueue = new ConcurrentHashMap<>();
         for (String nodeId:graph.getNodeMap().keySet()) {
-            BlockingQueue queue = new LinkedBlockingQueue();
+            BlockingQueue queue = new LinkedBlockingQueue(DEFAULT_QUEUE_SIZE);
             metaQueue.put(nodeId, queue);
         }
         mergeQueue = new ConcurrentHashMap<>();
@@ -122,7 +122,14 @@ public class SmartQueue implements MsgQueue {//ThreadSafe
         runningFlag = false;
         for (String key :metaQueue.keySet()) {
             try {
-                metaQueue.get(key).put(end);
+                BlockingQueue queue = metaQueue.get(key);
+                if(!graph.isFollowNodeof(nodeId, key)){//前置节点需要清空数据队列
+                    queue.clear();
+                    queue.put(end);
+                }else{//后置节点直接发送停止消息
+                    queue.put(end);
+                }
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

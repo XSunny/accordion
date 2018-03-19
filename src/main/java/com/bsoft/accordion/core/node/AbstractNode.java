@@ -15,7 +15,7 @@ public abstract class AbstractNode implements Runnable{
 
     protected String nodeId;//节点在 graph 和 queue 中的唯一标识
 
-    protected Processor processor;
+    protected Processor processor;//处理过程接口
 
     protected Config config;// 取消了节点持有消息的机制而引入了配置
 
@@ -41,16 +41,21 @@ public abstract class AbstractNode implements Runnable{
             try {
                 if (queue == null){
                     throw new NullPointerException("none data queue found, init error!");
-                }
-                sourceMeta =  queue.getNextMeta(nodeId);//TODO 交由任务层面控制新建数据,当前问题：过量生成起始消息
+                }//TODO 交由任务层面控制新建数据,当前问题：过量生成起始消息,直接设置blockList的容量会导致死锁问题。
+                // （如果前线程因为容量上限而被阻塞，后线程又已经结束而无法消费的话，前线程将无法停止）
+                sourceMeta =  queue.getNextMeta(nodeId);
                 if (sourceMeta == null){
                     throw new NullPointerException("source meta data is null");
                 }
                 if (sourceMeta.isEndMsg()){//停止消息
                     runningFlag = false;
-                    System.out.println("**{ end }node exit id :"+this.nodeId);
+                    System.out.println("**{ end } node exit id :"+this.nodeId);
                     break;
-//                    queue.pushMeta(nodeId, sourceMeta);//* 向下传递停止消息方案被抛弃的原因是 ： 如果节点不在出错节点的下游，将接收不到这个停止消息，前置节点仍然无法保证一致性问题。
+                 /*
+                向下传递停止消息方案被抛弃的原因是 ： 如果节点不在出错节点的下游，将接收不到这个停止消息，前置节点仍然无法保证一致性问题。
+                */
+//                 queue.pushMeta(nodeId, sourceMeta);
+
                 }
                 MetaData meta = processor.process(sourceMeta);
                 queue.pushMeta(nodeId, meta);

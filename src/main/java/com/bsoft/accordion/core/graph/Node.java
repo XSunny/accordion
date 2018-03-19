@@ -9,11 +9,11 @@ import java.util.List;
  */
 public class Node {
 
-    String nodeId;//
+    private String nodeId;//
 
-    List<Node> next = new ArrayList<>();
+    private List<Node> next = new ArrayList<>();
 
-    List<Node> pre = new ArrayList<>();
+    private List<Node> pre = new ArrayList<>();
 
     public Node(){
     }
