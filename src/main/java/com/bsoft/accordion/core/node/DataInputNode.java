@@ -13,4 +13,9 @@ public class DataInputNode extends AbstractNode {
         this.firstNode = true;
     }
 
+    public DataInputNode(Config config){
+        this.config = config;
+    }
+
+
 }

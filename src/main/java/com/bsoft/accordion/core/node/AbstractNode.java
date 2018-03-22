@@ -17,7 +17,7 @@ public abstract class AbstractNode implements Runnable{
 
     protected Processor processor;//处理过程接口
 
-    protected Config config;// 取消了节点持有消息的机制而引入了配置
+    protected Config config;// 取消了节点持有消息的机制而引入了配置 TODO 启用配置？
 
     protected volatile Boolean runningFlag = true;
 
@@ -27,6 +27,10 @@ public abstract class AbstractNode implements Runnable{
 
     public AbstractNode(){
         processor = new DefaultProcessor();
+    }
+
+    public AbstractNode(Config config){
+        this.config = config;
     }
 
     public AbstractNode(Processor processor){

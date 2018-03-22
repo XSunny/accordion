@@ -124,9 +124,11 @@ public class SmartQueue implements MsgQueue {//ThreadSafe
             try {
                 BlockingQueue queue = metaQueue.get(key);
                 if(!graph.isFollowNodeof(nodeId, key)){//前置节点需要清空数据队列
-                    queue.clear();
-                    queue.put(end);
-                }else{//后置节点直接发送停止消息
+                    synchronized (queue){
+                        queue.clear();
+                        queue.put(end);
+                    }
+                }else{//TODO 后置节点直接发送停止消息,似乎不能保证正确的结束数据传递
                     queue.put(end);
                 }
 

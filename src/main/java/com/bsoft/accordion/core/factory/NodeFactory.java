@@ -19,13 +19,13 @@ public class NodeFactory {
     public static AbstractNode getProcessNode(NodeFactory.TYPE type, Config config){
         switch (type){
             case INPUT_DATABASE:
-                return new DataInputNode();
+                return new DataInputNode(config);
             case OUTPUT_DATABASE:
-                return new DataOutputNode();
+                return new DataOutputNode(config);
             case NORMAL_TRANSFORM:
-                return new NormalNode();
+                return new NormalNode(config);
             default:
-                return new NormalNode();
+                return new NormalNode(config);
         }
     }
 

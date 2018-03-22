@@ -10,4 +10,8 @@ public class DataOutputNode extends AbstractNode {
     public DataOutputNode(){
         super();
     }
+
+    public DataOutputNode(Config config){
+        this.config = config;
+    }
 }
