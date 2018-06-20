@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Mappers>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_NORMAL_SIGN</TargetSection>
+        <TargetName>*</TargetName>
+        <PropType>PROP_TAG_INDICATOR_VALUE</PropType>
+        <PropName>舒张压</PropName>
+
+        <Section>基本检查指征</Section>
+        <Field>舒张压</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_NORMAL_SIGN</TargetSection>
+        <TargetName>*</TargetName>
+        <PropType>PROP_TAG_INDICATOR_VALUE</PropType>
+        <PropName>收缩压</PropName>
+
+        <Section>基本检查指征</Section>
+        <Field>收缩压</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_NORMAL_SIGN</TargetSection>
+        <TargetName>*</TargetName>
+        <PropType>PROP_TAG_INDICATOR_VALUE</PropType>
+        <PropName>体温</PropName>
+
+        <Section>基本检查指征</Section>
+        <Field>体温</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_NORMAL_SIGN</TargetSection>
+        <TargetName>*</TargetName>
+        <PropType>PROP_TAG_INDICATOR_VALUE</PropType>
+        <PropName>脉搏</PropName>
+
+        <Section>基本检查指征</Section>
+        <Field>脉搏</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_NORMAL_SIGN</TargetSection>
+        <TargetName>*</TargetName>
+        <PropType>PROP_TAG_INDICATOR_VALUE</PropType>
+        <PropName>呼吸</PropName>
+
+        <Section>基本检查指征</Section>
+        <Field>呼吸</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <!--<Mapper>-->
+        <!--<TargetSection>ENTRY_TAG_OPERATION_P</TargetSection>-->
+        <!--<TargetName>*</TargetName>-->
+        <!--<PropType>PROP_TAG_OPERATION_TYPE</PropType>-->
+        <!--<PropName></PropName>-->
+
+        <!--<Section>手术</Section>-->
+        <!--<Field>手术</Field>-->
+
+        <!--<Processor>com.bsoft.map.face.BaseValueProcessor</Processor>-->
+    <!--</Mapper>-->
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*</TargetName>
+        <PropType>PROP_TAG_CAUSE_FACTOR</PropType>
+        <PropName>诱因</PropName>
+
+        <Section>病史</Section>
+        <Field>诱因</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*</TargetName>
+
+        <Section>病史</Section>
+        <Field>有无症状</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*腹痛</TargetName>
+
+        <Section>病史</Section>
+        <Field>腹痛</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*腹胀</TargetName>
+
+        <Section>病史</Section>
+        <Field>腹胀</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*黄疸</TargetName>
+
+        <Section>病史</Section>
+        <Field>黄疸</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*恶心</TargetName>
+
+        <Section>病史</Section>
+        <Field>恶心</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*呕吐</TargetName>
+
+        <Section>病史</Section>
+        <Field>呕吐</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*腰背痛</TargetName>
+
+        <Section>病史</Section>
+        <Field>腰背痛</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*腹泻</TargetName>
+
+        <Section>病史</Section>
+        <Field>腹泻</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*低血糖</TargetName>
+
+        <Section>病史</Section>
+        <Field>低血糖</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*低血糖</TargetName>
+
+        <Section>病史</Section>
+        <Field>低血糖</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P;ENTRY_TAG_DISEASE_P</TargetSection>
+        <TargetName>*消化系统溃疡</TargetName>
+
+        <Section>病史</Section>
+        <Field>消化系统溃疡</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*</TargetName>
+
+        <Section>病史</Section>
+        <Field>其他症状</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*糖尿病</TargetName>
+
+        <Section>病史</Section>
+        <Field>糖尿病史</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*糖尿病</TargetName>
+        <PropType>PROP_TAG_TIME_ENDURANCE</PropType>
+        <PropName>持续时间</PropName>
+
+        <Section>病史</Section>
+        <Field>糖尿病史(时间)</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_DISEASE_P</TargetSection>
+        <TargetName>*慢性胰腺炎史</TargetName>
+
+        <Section>病史</Section>
+        <Field>慢性胰腺炎史</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_DISEASE_P</TargetSection>
+        <TargetName>*胆囊炎史</TargetName>
+
+        <Section>病史</Section>
+        <Field>胆囊炎病史</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_HABIT_P</TargetSection>
+        <TargetName>*吸烟</TargetName>
+
+        <Section>病史</Section>
+        <Field>吸烟史</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_HABIT_P</TargetSection>
+        <TargetName>*吸烟</TargetName>
+        <PropType>PROP_TAG_DAILY_Q</PropType>
+        <PropName>每日量</PropName>
+
+        <Section>病史</Section>
+        <Field>吸烟史-计量</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_HABIT_P</TargetSection>
+        <TargetName>*吸烟</TargetName>
+        <PropType>PROP_TAG_TIME_ENDURANCE</PropType>
+        <PropName>持续时间</PropName>
+
+        <Section>病史</Section>
+        <Field>吸烟史-持续时间</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_HABIT_P</TargetSection>
+        <TargetName>*饮酒</TargetName>
+
+        <Section>病史</Section>
+        <Field>饮酒史</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_HABIT_P</TargetSection>
+        <TargetName>*饮酒</TargetName>
+        <PropType>PROP_TAG_DAILY_Q</PropType>
+        <PropName>每日量</PropName>
+
+        <Section>病史</Section>
+        <Field>饮酒-计量</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_HABIT_P</TargetSection>
+        <TargetName>*饮酒</TargetName>
+        <PropType>PROP_TAG_TIME_ENDURANCE</PropType>
+        <PropName>持续时间</PropName>
+
+        <Section>病史</Section>
+        <Field>饮酒-持续时间</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_HABIT_P</TargetSection>
+        <TargetName>*</TargetName>
+
+        <Section>病史</Section>
+        <Field>其他个人史</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_GENETIC_HISTORY_P</TargetSection>
+        <TargetName>*胰腺癌家族史</TargetName>
+
+        <Section>病史</Section>
+        <Field>胰腺癌家族史</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_GENETIC_HISTORY_P</TargetSection>
+        <TargetName>*胰腺癌家族史</TargetName>
+
+        <Section>病史</Section>
+        <Field>肿瘤家族史</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_GENETIC_HISTORY_P</TargetSection>
+        <TargetName>*</TargetName>
+
+        <Section>病史</Section>
+        <Field>其他家族史</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*浅表淋巴结肿大</TargetName>
+
+        <Section>病史</Section>
+        <Field>浅表淋巴结肿大</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*浅表淋巴结肿大</TargetName>
+        <PropType>PROP_TAG_POSITION</PropType>
+        <PropName>部位</PropName>
+
+        <Section>病史</Section>
+        <Field>浅表淋巴结肿大-位置</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_GENERAL_INDICATOR</TargetSection>
+        <TargetName>*</TargetName>
+        <PropType>PROP_TAG_INDICATOR_VALUE</PropType>
+        <PropName>BMI</PropName>
+
+        <Section>病史</Section>
+        <Field>BMI</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_GENERAL_INDICATOR</TargetSection>
+        <TargetName>*</TargetName>
+        <PropType>PROP_TAG_INDICATOR_VALUE</PropType>
+        <PropName>NRS</PropName>
+
+        <Section>病史</Section>
+        <Field>NRS</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*包块</TargetName>
+
+        <Section>病史</Section>
+        <Field>包块</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*包块</TargetName>
+        <PropType>PROP_TAG_POSITION</PropType>
+        <PropName>部位</PropName>
+
+        <Section>病史</Section>
+        <Field>包块-位置</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*压痛</TargetName>
+
+        <Section>病史</Section>
+        <Field>压痛</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*压痛</TargetName>
+        <PropType>PROP_TAG_POSITION</PropType>
+        <PropName>部位</PropName>
+
+        <Section>病史</Section>
+        <Field>压痛-位置</Field>
+
+        <Processor>com.bsoft.map.face.BaseValueProcessor</Processor>
+    </Mapper>
+
+    <Mapper>
+        <TargetSection>ENTRY_TAG_SYMPTOM_P</TargetSection>
+        <TargetName>*腹水</TargetName>
+
+        <Section>病史</Section>
+        <Field>腹水</Field>
+
+        <Processor>com.bsoft.map.face.ExistProcessor</Processor>
+    </Mapper>
+
+</Mappers>

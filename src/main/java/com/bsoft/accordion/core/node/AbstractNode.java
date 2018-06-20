@@ -1,6 +1,6 @@
 package com.bsoft.accordion.core.node;
 
-import com.bsoft.accordion.core.MetaData;
+import com.bsoft.accordion.core.metadata.MetaData;
 import com.bsoft.accordion.core.process.DefaultProcessor;
 import com.bsoft.accordion.core.process.Processor;
 import com.bsoft.accordion.core.queue.MsgQueue;
@@ -56,7 +56,8 @@ public abstract class AbstractNode implements Runnable{
                     System.out.println("**{ end } node exit id :"+this.nodeId);
                     break;
                  /*
-                向下传递停止消息方案被抛弃的原因是 ： 如果节点不在出错节点的下游，将接收不到这个停止消息，前置节点仍然无法保证一致性问题。
+                   向下传递停止消息方案被抛弃的原因是 ：
+                   如果节点不在出错节点的下游，将接收不到这个停止消息，前置节点仍然无法保证一致性问题。
                 */
 //                 queue.pushMeta(nodeId, sourceMeta);
 

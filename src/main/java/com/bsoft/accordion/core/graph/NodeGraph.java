@@ -14,8 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  *  随机访问的双向链表，可以访问随机节点的前序节点和后序节点
  *
- *  多线程情况下，只进行get操作，故不做同步
- *
+ * *
  */
 public class NodeGraph {
 

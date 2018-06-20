@@ -1,8 +1,7 @@
 package com.bsoft.accordion.core.task;
 
-import com.bsoft.accordion.core.MetaData;
+import com.bsoft.accordion.core.metadata.MetaData;
 import com.bsoft.accordion.core.factory.NodeFactory;
-import com.bsoft.accordion.core.node.AbstractNode;
 import com.bsoft.accordion.core.node.Config;
 import com.bsoft.accordion.core.process.Processor;
 
@@ -25,10 +24,10 @@ public class WorkingContext {
             int count =0;
             @Override
             public MetaData process(MetaData data) {
-                data.getData().put("datacount", count++);
-                data.getData().put("normalData", "name1");
-                System.out.println("Intput 0 meta:" + data.getData());
-                if (count > 1000){
+                data.set("datacount", count++);
+                data.set("normalData", "name1");
+//                System.out.println("Intput 0 meta:" + data.getDataAsMap());
+                if (count > 1000000){
                     throw new NullPointerException();
                 }
                 return data;
@@ -37,25 +36,25 @@ public class WorkingContext {
         nodes.add(createNodeMeta("normalNode#1",  NodeFactory.TYPE.INPUT_DATABASE, null, new Processor() {
             @Override
             public MetaData process(MetaData data) {
-                int num = (Integer) data.getData().get("datacount")- 1;
-                data.getData().put("addData1", num);
-                System.out.println("normalnode 1 excute! meta:"+data.getData());
+                int num = (Integer) data.get("datacount")- 1;
+                data.set("addData1", num);
+//                System.out.println("normalnode 1 excute! meta:"+data.getDataAsMap());
                 return data;
             }
         }));
         nodes.add(createNodeMeta("normalNode#2", NodeFactory.TYPE.INPUT_DATABASE, null, new Processor() {
             @Override
             public MetaData process(MetaData data) {
-                int num = (Integer) data.getData().get("datacount")+ 1;
-                data.getData().put("addData2", num);
-                System.out.println("normalnode 2 excute! meta:"+data.getData());
+                int num = (Integer) data.get("datacount")+ 1;
+                data.set("addData2", num);
+//                System.out.println("normalnode 2 excute! meta:"+data.getDataAsMap());
                 return data;
             }
         }));
         nodes.add(createNodeMeta("normalNode#3", NodeFactory.TYPE.NORMAL_TRANSFORM, null, (data) -> {
-                int sub = (Integer) data.getData().get("addData1")+ (Integer) data.getData().get("addData2");
-                data.getData().put("sub", sub);
-                System.out.println("sub node excute! meta:"+data.getData());
+                int sub = (Integer) data.get("addData1")+ (Integer) data.get("addData2");
+                data.set("sub", sub);
+//                System.out.println("sub node excute! meta:"+data.getDataAsMap());
                 return data;
             }
         ));

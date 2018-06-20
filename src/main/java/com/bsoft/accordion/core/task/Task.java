@@ -2,10 +2,14 @@ package com.bsoft.accordion.core.task;
 
 
 import com.bsoft.accordion.core.graph.NodeGraph;
+import com.bsoft.accordion.core.metadata.MetaData;
 import com.bsoft.accordion.core.node.AbstractNode;
+import com.bsoft.accordion.core.proxy.ProxyCenter;
+import com.bsoft.accordion.core.proxy.Wrapper;
 import com.bsoft.accordion.core.queue.QueueManager;
 import com.bsoft.accordion.core.queue.SmartQueue;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,7 +44,24 @@ public abstract class Task{// 不需要实现Runnable,直接实现
 
     public void excute() {
         for (AbstractNode link: chain) {
-            service.submit(link);
+            service.submit(ProxyCenter.getProxy(Runnable.class, link, new Wrapper() {
+                long watch;
+
+                @Override
+                public Object beforeMethod(Object obj, Method method, Object[] args) {
+                    watch = System.currentTimeMillis();
+                    return null;                }
+
+                @Override
+                public Object afterMethod(Object obj, Method method, Object[] args) {
+                    MetaData meta = (MetaData) args[0];
+                    //System.out.println("process time cost: "+ (System.currentTimeMillis()-watch));
+                    System.out.println("process speed: "+meta.getBatchId()/(System.currentTimeMillis()-watch));
+                    return null;
+                }
+
+
+            }));
         }
         service.shutdown();
     }

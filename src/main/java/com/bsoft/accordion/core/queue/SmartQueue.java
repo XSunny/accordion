@@ -1,7 +1,7 @@
 package com.bsoft.accordion.core.queue;
 
 
-import com.bsoft.accordion.core.MetaData;
+import com.bsoft.accordion.core.metadata.MetaData;
 import com.bsoft.accordion.core.graph.NodeGraph;
 
 import java.util.ArrayList;

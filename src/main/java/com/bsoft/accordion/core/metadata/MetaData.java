@@ -1,5 +1,6 @@
-package com.bsoft.accordion.core;
+package com.bsoft.accordion.core.metadata;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import java.util.Map;
  */
 public class MetaData {
 
-    private Map<String,Object> data = new HashMap<>();
+    private Map<String,Object> data = new HashMap();
 
     private long batchId = 0;
 
@@ -25,7 +26,7 @@ public class MetaData {
     public MetaData(MetaData meta) {
         this.batchId = meta.batchId;
         this.endMsg = meta.endMsg;
-        this.data = new HashMap<>(meta.data);
+        this.data = new HashMap(meta.data);
     }
 
     public void merge(MetaData meta) {
@@ -33,8 +34,20 @@ public class MetaData {
         data.putAll(meta.getData());
     }
 
-    public Map<String, Object> getData() {
-        return data;
+    private Map<String, Object> getData(){
+        return this.data;
+    }
+
+    public Map<String, Object> getDataAsMap() {// read only
+        return Collections.unmodifiableMap(data);
+    }
+
+    public void set(String key, Object obj){
+        this.data.put(key, obj);
+    }
+
+    public Object get(String key){
+        return this.data.get(key);
     }
 
     public void setData(Map<String, Object> data) {
