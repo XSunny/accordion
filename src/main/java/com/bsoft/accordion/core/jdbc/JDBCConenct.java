@@ -1,8 +1,6 @@
 package com.bsoft.accordion.core.jdbc;
 
-import com.bsoft.accordion.core.job.CheckJob;
-import com.bsoft.accordion.core.process.Processor;
-import com.sun.javafx.collections.MappingChange;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,20 +10,27 @@ import java.sql.*;
 /**
  * @author sky
  *
- * JDBC 基类 
- * 
+ * JDBC 基类
+ *
  */
 public class JDBCConenct {
 
-	private static final Logger log = LoggerFactory.getLogger(JDBCConenct.class);
+//	private static final Logger log = LoggerFactory.getLogger(JDBCConenct.class);
 
 	protected Connection connect = null;
+
+	private int initStats = -1;
+
+	public JDBCConenct(){
+
+	}
 
 	public JDBCConenct(String className, String url) {
 		try {
 			Class.forName(className);
 			DriverManager.setLoginTimeout(6);
 			connect = DriverManager.getConnection(url);
+			checkConnecction();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -39,6 +44,7 @@ public class JDBCConenct {
 			Class.forName(className);
 			DriverManager.setLoginTimeout(6);
 			connect = DriverManager.getConnection(url, properties);
+			checkConnecction();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -52,11 +58,27 @@ public class JDBCConenct {
 			Class.forName(className);
 			DriverManager.setLoginTimeout(6);
 			connect = DriverManager.getConnection(url, username, password);
+			checkConnecction();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			close();
+		}
+	}
+
+	private boolean checkConnecction(){
+		if (connect != null){
+			initStats = 0;
+			return true;
+		}
+		initStats = -1;
+		return false;
+	}
+
+	private void vaildConnection() throws Exception{
+		if (this.initStats != 0 || connect.isClosed()){
+			throw new Exception(" connect invalid .");
 		}
 	}
 
@@ -78,10 +100,16 @@ public class JDBCConenct {
 		return connect;
 	}
 
+	public void setConnect(Connection connection){
+		this.connect = connection;
+		this.initStats = 0;
+	}
+
 	public int executeSql(String sql) throws Exception{
 		int rs = 0;
 		Statement statement = null;
 		try {
+			vaildConnection();
 			// Statements allow to issue SQL queries to the database
 			statement = connect.createStatement();
 			// Result set get the result of the SQL query
@@ -89,7 +117,7 @@ public class JDBCConenct {
 
 			connect.commit();
 
-			log.info("SQL: " + sql + " | result : modify " + rs + " rows.");
+//			log.info("SQL: " + sql + " | result : modify " + rs + " rows.");
 
 		} catch (Exception e) {
 
@@ -106,7 +134,7 @@ public class JDBCConenct {
 
 		return rs;
 	}
-	
+
 	public void close() {
 		try {
 			if (connect != null) {
@@ -123,6 +151,7 @@ public class JDBCConenct {
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
+			vaildConnection();
 			statement = connect.prepareStatement(sql,ResultSet.TYPE_FORWARD_ONLY,
 					ResultSet.CONCUR_READ_ONLY);
 			statement.setFetchSize(Integer.MIN_VALUE);
@@ -152,12 +181,13 @@ public class JDBCConenct {
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		try {
+			vaildConnection();
 			statement = connect.prepareStatement(sql);
 			// Result set get the result of the SQL query
 
 			rs = statement.executeQuery();
 			result = parseResult(rs);
-			log.info("SQL: " + sql + " | result : get " + rs.getFetchSize() + " recodes.");
+//			log.info("SQL: " + sql + " | result : get " + rs.getFetchSize() + " recodes.");
 		}
 		catch(Exception e){
 			e.printStackTrace();

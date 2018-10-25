@@ -54,7 +54,7 @@ public class DataChecker {
         return o.equals(o1);
     }
 
-    private static List<Map<String, Object>> getResults( JDBCConenct conenct1, String sql) {
+    public static List<Map<String, Object>> getResults( JDBCConenct conenct1, String sql) {
         List<Map<String, Object>> rs = null;
         try {
             rs = conenct1.executeQuery(sql);

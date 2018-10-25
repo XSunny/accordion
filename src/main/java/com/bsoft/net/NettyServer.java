@@ -39,7 +39,7 @@ public class NettyServer {
             // shut down your server.
             f.channel().closeFuture().sync();
         }catch (Exception e){
-
+            e.printStackTrace();
         }
         finally {
             workGruop.shutdownGracefully();
