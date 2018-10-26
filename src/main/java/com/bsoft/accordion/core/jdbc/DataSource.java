@@ -1,7 +1,9 @@
 package com.bsoft.accordion.core.jdbc;
 
 import com.bsoft.accordion.core.job.CastUtil;
-import java.util.*;
+
+import java.util.Map;
+
 /**
  * Created by sky on 2018/4/19.
  */
@@ -56,6 +58,10 @@ public class DataSource {
             throw new IllegalStateException("datasource should be init before use.");
         }
         return  new JDBCConenct(this.getClassName(), this.getUrl(), CastUtil.cast2Properties(this.getProperties()));
+    }
+
+    public void configReady(){
+        this.initStats = true;
     }
 
     @Override

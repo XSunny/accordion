@@ -5,6 +5,9 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequestDecoder;
+import io.netty.handler.codec.http.HttpResponseEncoder;
 
 /**
  * Created by sky on 2018/6/20.
@@ -25,7 +28,12 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new NioServer());
+                            ch.pipeline()
+//                                    .addLast(new NioServer())
+                                    .addLast("decoder", new HttpRequestDecoder())   // 1
+                                    .addLast("encoder", new HttpResponseEncoder())  // 2
+                                    .addLast("aggregator", new HttpObjectAggregator(512 * 1024))    // 3
+                                    .addLast("handler", new HttpHandler());
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)          // (5)

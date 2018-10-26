@@ -3,6 +3,7 @@ package com.bsoft.net;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -32,27 +33,27 @@ public class NioServer extends ChannelInboundHandlerAdapter {
             "Content-Length: 7\n" +
             "Keep-Alive: timeout=30, max=100\n" +
             "Connection: Keep-Alive\n" +
-            "Content-Type: text/html\n 1111111";
+            "Content-Type: text/html\n 1111111111111111111111111111111111111111111111111111111111111111111";
+
+    StringBuilder localStrBf = new StringBuilder();
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) { // (2)
         ByteBuf in = (ByteBuf) msg;
-//        try {
-//            while (in.isReadable()) { // (1)
-//                System.out.print((char) in.readByte());
-//                System.out.flush();
-//
-//            }
-
-
-        byte[] data = new byte[((ByteBuf) msg).capacity()];
-        for (int i = 0; i< ((ByteBuf) msg).capacity(); i++){
-            data[i] = ((ByteBuf) msg).readByte();
+        String readStr = in.toString(CharsetUtil.UTF_8);
+        localStrBf.append(readStr);
+        if (localStrBf.toString().endsWith("\r\n\r\n")){
+            processRequest(ctx);
+            localStrBf.setLength(0);
         }
-        ((ByteBuf) msg).clear();
+        ReferenceCountUtil.release(msg);
+    }
+
+    private void processRequest(ChannelHandlerContext ctx) {
         StringEntity entry = null;
+
         try {
-            String request = new String(data);
+            String request = this.localStrBf.toString();
             entry = new StringEntity(request);
             System.out.println(request);
         } catch (UnsupportedEncodingException e) {
@@ -76,9 +77,7 @@ public class NioServer extends ChannelInboundHandlerAdapter {
 
         ctx.write(resp); // (1)
         ctx.flush(); // (2)
-//        } finally {
-//            ReferenceCountUtil.release(msg); // (2)
-//        }
+
     }
 
     @Override
@@ -87,5 +86,11 @@ public class NioServer extends ChannelInboundHandlerAdapter {
         cause.printStackTrace();
         ctx.close();
     }
+
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+        ctx.flush();
+    }
+
 }
 
