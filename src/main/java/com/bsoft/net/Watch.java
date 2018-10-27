@@ -23,6 +23,10 @@ public class Watch {
         return this;
     }
 
+    public long timeCost(){
+        return end - start;
+    }
+
     @Override
     public String toString() {
         return (end - start)+" ms";

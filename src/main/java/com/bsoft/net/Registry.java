@@ -8,8 +8,8 @@ import java.util.*;
  */
 public class Registry {
 
-    static String UrlField_KEY_Name = "";
-    static String UrlField_VALUE_Name = "";
+    public static String UrlField_KEY_Name = "";
+    public static String UrlField_VALUE_Name = "";
 
     static String Default_RealUrl = "http://10.10.0.207:9392/";
 
@@ -17,28 +17,58 @@ public class Registry {
 
     static {
         try {
-            registryUrl("/user", "http://10.10.0.207:9392/");
+            registryUrl("/user", "http://localhost:8080");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static String getRealUrl(String url) {// TODO 错误控制，防止不合法url 导致程序异常
-        System.out.println(url);
+    public static void setMapUrlFieldName(String urlField_KEY_Name) {
+        UrlField_KEY_Name = urlField_KEY_Name;
+    }
+
+    public static void setTargetUrlFieldName(String urlField_VALUE_Name) {
+        UrlField_VALUE_Name = urlField_VALUE_Name;
+    }
+
+    public static void setDefaultUrl(String default_RealUrl) {
+        Default_RealUrl = default_RealUrl;
+    }
+
+    public static Pair<String,String> getMatchUrl(String url) {// TODO 错误控制，防止不合法url 导致程序异常
         String realUrl = Default_RealUrl;
-        String tail = "";
-        if (url.contains("?")){//有 ？ 的 url 处理
-            tail = "";
-        }
-        List<String> urls = fastSplit(url, '/');
-        urls = spliceUrl(urls);
-        for (String t_url: urls){//最长优先匹配
-            realUrl = urlMapper.get(t_url);
-            if (realUrl != null){
-                break;
+        //String tail = "";
+        String path = "";
+        try {
+            if (url.contains("?")){//有 ？ 的 url 处理
+                //tail = getTailStr(url);
+                path = getPathUrl(url);
+            }else {
+                path = url;
+            }
+            List<String> urls = fastSplit(path, '/');
+            urls = spliceUrl(urls);
+            for (String t_url: urls){//最长优先匹配
+                String t_realUrl = urlMapper.get(t_url);
+                if (t_realUrl != null){
+                    realUrl = t_realUrl + url.substring(t_url.length());//路径匹配
+                    return new Pair<>(t_url, realUrl);
+                    //break;
+                }
             }
         }
-        return realUrl+tail;
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return new Pair<>("",realUrl);
+    }
+
+    private static String getPathUrl(String url) {
+        return url.substring(0,url.indexOf('?'));
+    }
+
+    private static String getTailStr(String url) {
+        return url.substring(url.indexOf('?'));
     }
 
     private static List<String> spliceUrl(List<String> urls) {
@@ -69,7 +99,7 @@ public class Registry {
             subsets.add(s.substring(indexes.get(j), indexes.get(j+1)));
         }
         if (indexes.get(indexes.size()-1) < s.length()){
-            subsets.add(s.substring(indexes.get(indexes.size()-1), s.length()-1));
+            subsets.add(s.substring(indexes.get(indexes.size()-1)));
         }
         return subsets;
     }
@@ -82,5 +112,9 @@ public class Registry {
         for (Map<String, Object> record: result){
             registryUrl(record.get(UrlField_KEY_Name).toString(),record.get(UrlField_VALUE_Name).toString());
         }
+    }
+
+    public static void deleteUrl(String hostUrl){
+        urlMapper.remove(hostUrl);
     }
 }

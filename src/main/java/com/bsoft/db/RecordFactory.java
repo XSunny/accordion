@@ -2,6 +2,7 @@ package com.bsoft.db;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -32,7 +33,7 @@ public class RecordFactory {
     }
 
     private static Map<String,String> getTypeMap(Map<String, Object> record) {
-        Map<String,String> types = new HashMap<>();
+        Map<String,String> types = new LinkedHashMap<>();
         for (Map.Entry entry: record.entrySet()) {
             String key = (String) entry.getKey();
             Object o = entry.getValue();
@@ -44,6 +45,9 @@ public class RecordFactory {
             }
             else if (o instanceof String){
                 types.put(key, STRING);
+                if (((String) o).length() > 200){
+                    types.put(key, TEXT);
+                }
             }
             else if (o instanceof Date){
                 types.put(key, DATE);

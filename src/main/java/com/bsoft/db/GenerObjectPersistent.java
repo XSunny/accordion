@@ -46,7 +46,7 @@ public class GenerObjectPersistent {
         try {
             rs =  excuteQuery(sql);
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return rs == null?  false : true;
     }

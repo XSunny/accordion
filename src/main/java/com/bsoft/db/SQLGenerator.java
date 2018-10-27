@@ -2,7 +2,7 @@ package com.bsoft.db;
 
 
 import com.bsoft.accordion.core.date.DateUitl;
-
+import java.util.*;
 import java.util.Date;
 
 /**
@@ -15,11 +15,14 @@ public class SQLGenerator {
         sql.append("create table ");
         sql.append(record.getTableName());
         sql.append(" ( ");
-        for (String key : record.getTypeMap().keySet()){
-            String type = record.getTypeMap().get(key);
+        for (Map.Entry entry : record.getTypeMap().entrySet()){
+            String type = (String) entry.getValue();
+            String key = (String) entry.getKey();
             if (key.equals(record.getPrimaryKey())){
+                if (type.equals(RecordFactory.STRING)){
+                    type = "VARCHAR(64)";
+                }
                 sql.append(key + " " + type+ " primary key,");
-
             }else {
                 sql.append(key + " " + type+ ",");
             }

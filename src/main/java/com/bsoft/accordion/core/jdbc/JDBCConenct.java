@@ -115,7 +115,7 @@ public class JDBCConenct {
 			// Result set get the result of the SQL query
 			rs = statement.executeUpdate(sql);
 
-			connect.commit();
+//			connect.commit();
 
 //			log.info("SQL: " + sql + " | result : modify " + rs + " rows.");
 

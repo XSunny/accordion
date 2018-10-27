@@ -1,9 +1,11 @@
 package com.bsoft.db;
 
 import com.bsoft.accordion.core.date.DateUitl;
+import io.crate.shade.com.google.common.collect.Maps;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -17,7 +19,7 @@ public class RecordWrapper {
         this.data.put(key,v);
     }
 
-    Map<String, Object> data = new HashMap<String,Object>();
+    Map<String, Object> data = Maps.newLinkedHashMap();
 
     public RecordWrapper set(String k, Object v){
         this.data.put(k,v);

@@ -1,6 +1,7 @@
 package com.bsoft.net;
 
 
+import com.bsoft.db.RecordWrapper;
 import com.bsoft.util.HttpRequestUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -44,8 +45,6 @@ public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> { 
     private String RES_CODE_FAILED = "failed.";
     private String RES_CODE_OK = "success.";
 
-    HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
 //        System.out.println("class:" + msg.getClass().getName());
@@ -58,38 +57,43 @@ public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> { 
         System.out.println("process header cost : " + watch.end());
     }
 
-    private void saveLog(ChannelHandlerContext ctx, FullHttpRequest msg, String result){
-        Map<String, Object> logs = new HashMap<>();
-        logs.put("ipaddress", ctx.channel().remoteAddress());
-        logs.put("", "");
-        logs.put("", "");
-        logs.put("", "");
-        logs.put("", "");
-        logs.put("", "");
-        logs.put("", "");
-//        MsgLogger.save(logs);
+    private void saveLog(ChannelHandlerContext ctx, FullHttpRequest msg, String matchUrl, String result, long timeCost, String cause){
+        RecordWrapper logs = new RecordWrapper("id", UUID.randomUUID().toString())
+            .set("id", UUID.randomUUID().toString())
+            .set("ipaddress", ctx.channel().remoteAddress())
+            .set("url", msg.uri())
+            .set("matchUrl", matchUrl)
+            .set("content", msg.content().toString(CharsetUtil.UTF_8))
+            .set("requestType", msg.method().asciiName())
+            .set("requestTime", new Date())
+            .set("timeCost", timeCost)
+            .set("result", result)
+            .set("resultDesp", cause);
+        MsgLogger.save(logs.toMap());
     }
 
     private void processHeader(ChannelHandlerContext ctx, FullHttpRequest msg) {
 
+        Watch watch = Watch.New().start();
         String url = msg.uri();
-        url = getRegistUrl(url);
+        //url = getRegistUrl(url);
+        Pair<String,String> url_match = Registry.getMatchUrl(url);
         //String hostname = msg.headers().get(HOST_NAME);
 
         //send request to the real server
-        HttpResponse response = send2Server(url, "", msg);
+        HttpResponse response = HttpClient.requestServer(url_match.getValue(), "", msg);
 
         if (response == null){
             DefaultFullHttpResponse response_t = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
-                    HttpResponseStatus.BAD_REQUEST, Unpooled.wrappedBuffer("".getBytes()));
+                    HttpResponseStatus.BAD_REQUEST, Unpooled.wrappedBuffer("request failed.".getBytes()));
             ctx.write(response_t);
             ctx.flush();
-            saveLog(ctx, msg, RES_CODE_FAILED);
+            saveLog(ctx, msg, url_match.getKey(), RES_CODE_FAILED, watch.end().timeCost(), "url: "+url_match.getValue()+" 访问失败" );
             return;
         }
 
         //get remote ip addr
-        System.out.println(ctx.channel().remoteAddress());
+        //System.out.println(ctx.channel().remoteAddress());
 
         //construct the response
         String content = "";
@@ -107,60 +111,9 @@ public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> { 
         //send back
         ctx.write(response_t);
         ctx.flush();
-        saveLog(ctx, msg, RES_CODE_OK);
+        saveLog(ctx, msg, url_match.getKey(), RES_CODE_OK, watch.end().timeCost(), "");
     }
 
-    private String getRegistUrl(String url) {
-        String url_r = Registry.getRealUrl(url);
-        if (url_r == null){
-            return url;
-        }
-        return url_r;
-    }
-
-    private HttpResponse send2Server(String url, String hostname, FullHttpRequest msg) {
-        CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
-
-        HttpUriRequest requst = null;
-        switch (msg.getMethod().asciiName().toString().toUpperCase()){//method
-            case "GET":{
-                requst = new HttpGet(url);
-
-            }break;
-            case "POST":{
-                requst = new HttpPost(url);
-                try {
-                    ((HttpPost)requst).setEntity(new StringEntity(msg.content().toString(CharsetUtil.UTF_8)));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }break;
-            default:
-                return null;
-        }
-
-        //headers
-        for (Map.Entry header :msg.headers().entries()){
-            if (!header.getKey().toString().toLowerCase().equals("content-length")&&!header.getKey().toString().toLowerCase().equals("host"))
-                requst.addHeader(header.getKey().toString(), header.getValue().toString());
-        }
-        try {//send
-            HttpResponse httpResponse = closeableHttpClient.execute(requst);
-            String content = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
-            httpResponse.setEntity(new StringEntity(content));
-            if (httpResponse != null) {
-                return httpResponse;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                closeableHttpClient.close();
-            } catch (IOException e) {
-            }
-        }
-        return null;
-    }
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
