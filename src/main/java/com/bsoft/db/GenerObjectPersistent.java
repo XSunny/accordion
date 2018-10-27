@@ -1,6 +1,9 @@
 package com.bsoft.db;
 
 
+import com.bsoft.accordion.core.jdbc.JDBCConenct;
+
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -72,9 +75,17 @@ public class GenerObjectPersistent {
 
     private List<Map<String, Object>> excuteQuery(String sql) {
         List<Map<String, Object>> rs = null;
+        JDBCConenct jdbcConenct = null;
         try {
-            rs = AdpterDataSource.getConnection().executeQuery(sql);
-        } catch (Exception e) {
+            jdbcConenct = AdpterDataSource.getConnection();
+            rs = jdbcConenct.executeQuery(sql);
+        }
+        catch (SQLException e1){
+            if (null != jdbcConenct)
+                AdpterDataSource.pool.remove(jdbcConenct);
+            System.err.println("excuteQuery exception:" + e1.getMessage());
+        }
+        catch (Exception e) {
             System.err.println("excuteQuery exception:" + e.getMessage());
         }
         return rs;

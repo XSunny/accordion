@@ -54,15 +54,14 @@ public class HttpHandlerProcess implements Runnable{
 
     public static void main(String []args){
 
-        ExecutorService threads = Executors.newFixedThreadPool(260);
-        long times = 5000;
+        ExecutorService threads = Executors.newFixedThreadPool(100);
+        long times = 1000;
         long time = System.currentTimeMillis();
         for (int i = 0; i < times; i++){
             threads.submit(new Runnable() {
                 @Override
                 public void run() {
                     HttpRequestUtil.httpRequest("http://localhost:9392/");
-
                 }
             });
         }

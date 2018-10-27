@@ -14,9 +14,10 @@ public class MsgLogger {
 
     private static String  TARGET_TABLE = "targetTable";
 
-    private static ExecutorService threads = Executors.newFixedThreadPool(20);
+    private static ExecutorService threads = Executors.newFixedThreadPool(10);
 
     public static void save(Map<String,Object> data){
+
         threads.submit(new Runnable() {
             @Override
             public void run() {
