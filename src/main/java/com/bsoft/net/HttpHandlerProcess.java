@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
 
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +33,7 @@ public class HttpHandlerProcess implements Runnable{
 //        System.out.println(request.toString());
         //2.发起请求
 
+
         //3/返回请求
 
         //getRealResponse():
@@ -48,20 +50,27 @@ public class HttpHandlerProcess implements Runnable{
         ctx.write(response);
         ctx.flush();
         System.out.println("----- *** ----- thread process finished.");
-
-
     }
 
     public static void main(String []args){
 
-        ExecutorService threads = Executors.newFixedThreadPool(100);
-        long times = 1000;
+        ExecutorService threads = Executors.newFixedThreadPool(30);
+        long times = 100;
         long time = System.currentTimeMillis();
         for (int i = 0; i < times; i++){
             threads.submit(new Runnable() {
                 @Override
                 public void run() {
-                    HttpRequestUtil.httpRequest("http://localhost:9392/");
+                    Map<String, String> params = new HashMap<>();
+                    params.put("empiid", "7ae7d70a286748608eb474f46b38fec6");
+                    params.put("recordcode", "wm");
+                    params.put("drugcode", "908");
+                    String content= HttpRequestUtil.httpRequestPost("http://localhost:8080/BHRView/drugsRecord/getRecordList.do"
+                            ,"JSESSIONID=892d76fa-2bcf-4555-930e-b842044ad723; tmp0=eNpdUE1PwkAQDV9CNEa9ejLEk8Fm2y2UciOKHwkWI3rxotvuFBZ3u7C7lA%2Fjz%2FF%2FusV4cQ4zk5k3773M3UGyVAoy86JBXaHLRAqHcBaTmDh0GcfSUTBh2qiNY1dCZg6VgrDMKfDfjaXNGRHQmBOtV1LRqpIc6okCYqSqQ0ZiDrRaQPYpzIkywmrVwFLw2nwqM6hbNUP4xx6XCeFwbAlzlsCjYjnjMIEyow05B1XwHf01fUoVaF0VTOuT%2Fxe6wqj%2BtQC0ISRlKQNayeTq3bqTBp2B63penGIaQteNvSBNwwD7OO54adDBabv0FD3voJGN8nZaurD1ZnE6IzlxloZxp68U2ejzXRna9%2BwQ0eF4MB7fj6K3h9H1YIhuPxntNV3qb1dYyFmwQFOVmxCFSIbdYN1sJabntl0Xe2Hb9f0AtUhSDHDghwhhHIQtse6hr9cf7aiNkw%3D%3D; splashShown1.6=1; Idea-667fe80f=4fb37348-2ca9-4b74-bb50-8bdb8227aa69; NG_TRANSLATE_LANG_KEY=zh-CN; ajs_group_id=null; ajs_anonymous_id=%22e88aa9ba7f9c4a0a39dad2b3d8fafa5a%22; ajs_user_id=%22e88aa9ba7f9c4a0a39dad2b3d8fafa5a%22; _ga=GA1.1.655302247.1525850047; intercom-lou-bda97f31bea8f639d9e93721d781cef31ff00628=1; JSESSIONID=1kzg7uaxvz8b81ck2n14xtzop1; BD_UPN=12314753",
+                            "",params
+                            );
+
+                    System.out.println(content);
                 }
             });
         }
@@ -78,5 +87,6 @@ public class HttpHandlerProcess implements Runnable{
         long used = System.currentTimeMillis() - time;
         System.out.println("time used : " + (used/1000.0) + " s");
         System.out.println("TPS : " + (times*1000/used) + " tps");
+        System.out.println("avg times : " + (used/times) + " ms");
     }
 }

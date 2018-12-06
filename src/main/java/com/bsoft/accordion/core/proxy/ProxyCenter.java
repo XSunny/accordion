@@ -1,13 +1,8 @@
 package com.bsoft.accordion.core.proxy;
 
-import com.bsoft.accordion.core.compare.ResultProcessor;
-
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by sky on 2018/4/28.

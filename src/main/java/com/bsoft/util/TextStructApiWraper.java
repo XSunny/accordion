@@ -34,7 +34,7 @@ public class TextStructApiWraper {
 //        obj.put("Doc_Title", "");
 //        obj.put("Doc_Content", context);
 //        obj.put("Hospital_Id", "");
-            data = HttpRequestUtil.httpRequestPost(ADD_URL, builder.string());
+            data = HttpRequestUtil.httpRequestPost(ADD_URL, builder.string() , "");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class TextStructApiWraper {
 //        obj.put("Doc_Title", "");
 //        obj.put("Doc_Content", context);
 //        obj.put("Hospital_Id", "");
-            data = HttpRequestUtil.httpRequestPost(SEARCH_URL, builder.string());
+            data = HttpRequestUtil.httpRequestPost(SEARCH_URL, builder.string(), "");
         } catch (IOException e) {
             e.printStackTrace();
         }

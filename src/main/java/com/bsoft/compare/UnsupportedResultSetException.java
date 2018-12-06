@@ -1,4 +1,4 @@
-package com.bsoft.accordion.core.compare;
+package com.bsoft.compare;
 
 /**
  * Created by sky on 2018/4/18.

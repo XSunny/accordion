@@ -1,6 +1,5 @@
-package com.bsoft.accordion.core.compare;
+package com.bsoft.compare;
 
-import com.bsoft.accordion.core.consts.Const;
 import com.bsoft.accordion.core.jdbc.JDBCConenct;
 import com.bsoft.accordion.core.job.SQL_Const;
 

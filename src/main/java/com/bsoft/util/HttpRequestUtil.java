@@ -35,13 +35,26 @@ public class HttpRequestUtil {
      * @param url
      * @return
      */
-	public static String httpRequest(String url){
+
+    static HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+    static CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
+
+
+    static public void shutdown(){
+        try {
+            closeableHttpClient.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static String httpRequest(String url){
 		return httpRequest(url, "", "");
 	}
 	
     public static String httpRequest(String url, String cookie, String hostname) {
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-        CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
+
         HttpGet httpGet = new HttpGet(url);
 
         if(!"".equals(hostname)){
@@ -56,7 +69,7 @@ public class HttpRequestUtil {
 
         httpGet.addHeader("max-age",String.valueOf(Integer.MAX_VALUE));
         httpGet.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-        //httpGet.addHeader("Accept-Charset", "utf-8");ha
+        httpGet.addHeader("Accept-Charset", "utf-8");
         httpGet.addHeader("Accept-Encoding", "gzip,deflate,sdch");
         httpGet.addHeader("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,es;q=0.4");
         httpGet.addHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36");
@@ -64,6 +77,7 @@ public class HttpRequestUtil {
             HttpResponse httpResponse = closeableHttpClient.execute(httpGet);
 
             HttpEntity entity = httpResponse.getEntity();
+//            return null;
             if (entity != null) {
                 String content = EntityUtils.toString(entity,"UTF-8");
                 return content;
@@ -71,10 +85,10 @@ public class HttpRequestUtil {
         } catch (IOException e) {
 
         } finally {
-            try {
-                closeableHttpClient.close();
-            } catch (IOException e) {
-            }
+//            try {
+//                closeableHttpClient.close();
+//            } catch (IOException e) {
+//            }
         }
         return null;
     }
@@ -136,8 +150,8 @@ public class HttpRequestUtil {
      * @return
      */
     public static String httpRequestPost(String url, String cookie,String hostname,Map<String,String> param) {
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-        CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
+//        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+//        CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
         HttpPost httpPost = new HttpPost(url);
 
         List <NameValuePair> params = new ArrayList<NameValuePair>();
@@ -174,10 +188,10 @@ public class HttpRequestUtil {
         } catch (IOException e) {
 
         } finally {
-            try {
-                closeableHttpClient.close();
-            } catch (IOException e) {
-            }
+//            try {
+//                closeableHttpClient.close();
+//            } catch (IOException e) {
+//            }
         }
         return null;
     }
@@ -186,11 +200,15 @@ public class HttpRequestUtil {
      * @param url
      * @return
      */
-    public static String httpRequestPost(String url, String data) {
+    public static String httpRequestPost(String url, String data, String cookie) {
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
         CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
         HttpPost httpPost = new HttpPost(url);
 
+
+        if(!"".equals(cookie)){
+            httpPost.addHeader("Cookie",cookie);
+        }
         httpPost.addHeader("max-age",String.valueOf(Integer.MAX_VALUE));
         httpPost.addHeader("Accept", "application/json,text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
         httpPost.addHeader("Accept-Encoding", "gzip,deflate,sdch");

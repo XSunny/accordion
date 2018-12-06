@@ -3,12 +3,9 @@ package com.bsoft.accordion.core.job;
 import com.bsoft.accordion.core.compare.*;
 import com.bsoft.accordion.core.jdbc.DataSource;
 import com.bsoft.accordion.core.jdbc.JDBCConenct;
-import com.bsoft.accordion.core.process.DefaultProcessor;
+import com.bsoft.compare.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sky on 2018/4/18.

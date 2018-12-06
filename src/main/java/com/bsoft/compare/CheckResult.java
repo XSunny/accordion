@@ -1,4 +1,4 @@
-package com.bsoft.accordion.core.compare;
+package com.bsoft.compare;
 
 import java.util.*;
 /**

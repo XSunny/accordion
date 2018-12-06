@@ -2,10 +2,7 @@ package com.bsoft.net;
 
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.util.CharsetUtil;
-import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.NoHttpResponseException;
+import org.apache.http.*;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -13,6 +10,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -27,7 +25,9 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by sky on 2018/10/26.
@@ -36,7 +36,29 @@ public class HttpClient {
 
     private static final PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
 
+    private static final int timeout = 60 * 1000;
+
+    static {
+        // Increase max total connection to 50
+        connManager.setMaxTotal(50);
+        // Increase default max connection per route to 20
+        connManager.setDefaultMaxPerRoute(50);
+
+        // Increase max connections for localhost:80 to 50
+//        HttpHost localhost = new HttpHost("locahost", 80);
+//        connManager.setMaxPerRoute(new HttpRoute(localhost), 50);
+
+        Thread thread = new IdleConnectionMonitorThread(connManager);
+        thread.start();
+    }
+
     private static final HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+//    static CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
+
+    static CloseableHttpClient  closeableHttpClient = HttpClients.custom()
+            .setConnectionManager(connManager)
+                .setDefaultRequestConfig(RequestConfig.custom().setConnectionRequestTimeout(timeout).setConnectTimeout(timeout).setSocketTimeout(timeout).build())
+            .build();
 
 
     static {
@@ -48,46 +70,56 @@ public class HttpClient {
 
     }
 
-    public static HttpResponse requestServer(String url, String hostname, FullHttpRequest msg) {
-        CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
+    public static void close(){
+        connManager.shutdown();
+        try {
+                closeableHttpClient.close();
+        } catch (IOException e) {
+        }
+    }
+
+    public static HttpResponse requestServer(String url, String hostname, String method, String inContent, Map<String,String> headers) {
+
+
+//        CloseableHttpClient closeableHttpClient = HttpClients.custom()
+//                .setConnectionManager(connManager)
+//                .build();
+
 
         HttpUriRequest requst = null;
-        switch (msg.getMethod().asciiName().toString().toUpperCase()){//method
+        switch (method.toString().toUpperCase()){//method
             case "GET":{
                 requst = new HttpGet(url);
 
             }break;
             case "POST":{
                 requst = new HttpPost(url);
-                try {
-                    ((HttpPost)requst).setEntity(new StringEntity(msg.content().toString(CharsetUtil.UTF_8)));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                ((HttpPost)requst).setEntity(new StringEntity(inContent, Charset.forName("UTF-8")));
             }break;
             default:
                 return null;
         }
 
         //headers
-        for (Map.Entry header :msg.headers().entries()){
+
+        for (Map.Entry header :headers.entrySet()){
             if (!header.getKey().toString().toLowerCase().equals("content-length")&&!header.getKey().toString().toLowerCase().equals("host"))
                 requst.addHeader(header.getKey().toString(), header.getValue().toString());
         }
         try {//send
             HttpResponse httpResponse = closeableHttpClient.execute(requst);
             String content = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
-            httpResponse.setEntity(new StringEntity(content));
+            httpResponse.setEntity(new StringEntity(content, Charset.forName("UTF-8")));
             if (httpResponse != null) {
                 return httpResponse;
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try {
-                closeableHttpClient.close();
-            } catch (IOException e) {
-            }
+//            try {
+//                closeableHttpClient.close();
+//            } catch (IOException e) {
+//            }
         }
         return null;
     }

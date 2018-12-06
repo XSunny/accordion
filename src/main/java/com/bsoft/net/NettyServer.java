@@ -14,7 +14,6 @@ import io.netty.handler.codec.http.HttpResponseEncoder;
  */
 public class NettyServer {
 
-
     int port = 9392;
 
     public void run() throws Exception{
@@ -55,11 +54,22 @@ public class NettyServer {
         }
     }
 
-    public static void main(String[] args){
+    public static void start(){
         try {
             new NettyServer().run();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String [] args){
+        try {
+            Registry.registryUrl("/baidu", "http://www.baidu.com");
+            Registry.registryUrl("/hcn2", "http://10.1.3.153:8081/outpatient/doctor");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        NettyServer.start();
     }
 }

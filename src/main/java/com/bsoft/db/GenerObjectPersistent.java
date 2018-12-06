@@ -21,7 +21,7 @@ public class GenerObjectPersistent {
     }
 
     public void excute(String sql) throws Exception {
-        System.out.println("excute sql : " + sql);
+        System.out.println("execute sql : " + sql);
         AdpterDataSource.getConnection().executeSql(sql);
     }
 
@@ -44,7 +44,7 @@ public class GenerObjectPersistent {
     }
 
     private boolean tableExists(SavedRecord record){
-        String sql = "select count(1) from "+ record.getTableName();
+        String sql = "select 1 from "+ record.getTableName();
         List<Map<String, Object>> rs = null;
         try {
             rs =  excuteQuery(sql);
@@ -83,10 +83,10 @@ public class GenerObjectPersistent {
         catch (SQLException e1){
             if (null != jdbcConenct)
                 AdpterDataSource.pool.remove(jdbcConenct);
-            System.err.println("excuteQuery exception:" + e1.getMessage());
+            System.err.println("executeQuery exception:" + e1.getMessage());
         }
         catch (Exception e) {
-            System.err.println("excuteQuery exception:" + e.getMessage());
+            System.err.println("executeQuery exception:" + e.getMessage());
         }
         return rs;
     }

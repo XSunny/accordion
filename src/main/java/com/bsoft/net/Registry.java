@@ -11,13 +11,13 @@ public class Registry {
     public static String UrlField_KEY_Name = "";
     public static String UrlField_VALUE_Name = "";
 
-    static String Default_RealUrl = "http://10.10.0.207:9392/";
+    static String Default_RealUrl = "http://10.10.0.7:9392/";
 
     static Map<String, String> urlMapper = new ConcurrentHashMap<String, String>();
 
     static {
         try {
-            registryUrl("/user", "http://localhost:8080");
+//            registryUrl("/", "http://localhost:8080");
         } catch (Exception e) {
             e.printStackTrace();
         }
